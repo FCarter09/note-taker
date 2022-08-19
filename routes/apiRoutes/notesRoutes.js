@@ -1,7 +1,8 @@
 
 const router = require('express').Router();
-const {  findById } = require('../../lib/notes');
+const {  findById, createNewNote } = require('../../lib/notes');
 let { notes } = require('../../db/db');
+
 
 
 // GET route for notes
@@ -27,17 +28,21 @@ router.get('/notes/:id', (req, res,) => {
 
  // POST route for adding new note
  router.post('/notes/', (req, res) => {
-    const note = req.body;
-    notes.push(note);
-    res.end()
+    req.body.id = notes.length.toString();
+
+    const note = createNewNote(req.body, notes);
+    if (note) {
+      res.json(note);
+    } else {
+      res.status(400).send('The note is not properly formatted.');
+    }
    
 });
 
 // DELETE route for note
 router.delete('/notes/:id', (req, res) =>{
   // delete note based on id
-  let noteId = req.params.id
-  console.log('before delete', notes);
+  let noteId = req.params.id;
   
   // remove item from notes array
   notes = notes.filter(note => note.id != noteId)
