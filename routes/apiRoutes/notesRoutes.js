@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
-const {  findById, createNewNote } = require('../../lib/notes');
+const {  findById, createNewNote} = require('../../lib/notes');
+const generateUniqueId = require('generate-unique-id');
 let { notes } = require('../../db/db');
 
 
@@ -28,7 +29,9 @@ router.get('/notes/:id', (req, res,) => {
 
  // POST route for adding new note
  router.post('/notes/', (req, res) => {
-    req.body.id = notes.length.toString();
+    //req.body.id = notes.length.toString();
+
+    req.body.id = generateUniqueId();
 
     const note = createNewNote(req.body, notes);
     if (note) {
